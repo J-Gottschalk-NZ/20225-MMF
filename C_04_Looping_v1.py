@@ -1,5 +1,6 @@
-MAX_TICKETS = 5
 
+# Initialise ticket numbers
+MAX_TICKETS = 5
 tickets_sold = 0
 
 while tickets_sold < MAX_TICKETS:
