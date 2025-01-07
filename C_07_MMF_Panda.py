@@ -22,7 +22,12 @@ mini_movie_frame['Profit'] = mini_movie_frame['Ticket Price'] - 5
 total_paid = mini_movie_frame['Total'].sum()
 total_profit = mini_movie_frame['Profit'].sum()
 
-print(mini_movie_frame)
+# Print the dataframe without the index
+# mini_movie_frame = mini_movie_frame.set_index('Name')
+# print(mini_movie_frame)
+print(mini_movie_frame.to_string(index=False))
+
+
 print()
 print(f"Total Paid: ${total_paid:.2f}")
 print(f"Total Profit: ${total_profit:.2f}")
