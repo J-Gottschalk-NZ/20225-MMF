@@ -32,6 +32,3 @@ while True:
 
 # pay_method = string_check("Payment method: ", payment_ans, 2)
 # print(f"You chose {pay_method}")
-
-
-
