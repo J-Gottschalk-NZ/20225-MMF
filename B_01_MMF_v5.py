@@ -1,5 +1,6 @@
 import pandas
 import random
+from datetime import date
 
 
 # Functions go here
@@ -7,7 +8,7 @@ def make_statement(statement, decoration):
     """Emphasises headings by adding decoration
     at the start and end"""
 
-    print(f"{decoration * 3} {statement} {decoration * 3}")
+    return f"{decoration * 3} {statement} {decoration * 3}"
 
 
 def string_check(question, valid_answers=('yes', 'no'),
@@ -29,11 +30,11 @@ def string_check(question, valid_answers=('yes', 'no'),
             elif response == item[:num_letters]:
                 return item
 
-        print(f"Please choose an option from {valid_answers}")
+        print(f"Please choose {valid_answers[0]} / {valid_answers[1]}")
 
 
 def instructions():
-    make_statement("Instructions", "ℹ️")
+    print(make_statement("Instructions", "ℹ️"))
 
     print('''
 
@@ -118,7 +119,7 @@ mini_movie_dict = {
 }
 
 # Program main heading
-make_statement("Mini-Movie Fundraiser Program", "🍿")
+print(make_statement("Mini-Movie Fundraiser Program", "🍿"))
 
 # Ask user if they want to see the instructions and
 # display them if necessary
@@ -199,7 +200,6 @@ winner = random.choice(all_names)
 
 # find index of winner (ie: position in list)
 winner_index = all_names.index(winner)
-print("winner", winner, "list position", winner_index)
 
 # retrieve Winner Ticket Price and Profit (so we can adjust
 # profit numbers so that the winning ticket is excluded)
@@ -212,18 +212,75 @@ for var_item in add_dollars:
     mini_movie_frame[var_item] = mini_movie_frame[var_item].apply(currency)
 
 # Output movie fram without index
-print(mini_movie_frame.to_string(index=False))
+mini_movie_string = mini_movie_frame.to_string(index=False)
 
-print()
-print(f"Total Paid: ${total_paid:.2f}")
-print(f"Total Profit: ${total_profit:.2f}")
+total_paid_string = f"Total Paid: ${total_paid:.2f}"
+total_profit_string = f"Total Profit: ${total_profit:.2f}"
+
+adjusted_explanation = (f"We have given away a ticket worth ${ticket_won:.2f} which \n"
+                        f"means our sales have decreased by ${ticket_won:.2f} and our \n"
+                        f"profit decreased by ${profit_won:.2f}.")
 
 # winner announcement
-print(f"The lucky winner is {winner}.  Their ticket worth ${ticket_won:.2f} is free!")
-print(f"Total Paid is now ${total_paid - ticket_won:.2f}")
-print(f"Total Profit is now ${total_profit - profit_won:.2f}")
+lucky_winner_string = (f"The lucky winner is {winner}.  "
+                       f"Their ticket worth ${ticket_won:.2f} is free!")
+final_total_paid_string = f"Total Paid is now ${total_paid - ticket_won:.2f}"
+final_profit_string = f"Total Profit is now ${total_profit - profit_won:.2f}"
 
 if tickets_sold == MAX_TICKETS:
-    print(f"You have sold all the tickets (ie: {MAX_TICKETS} tickets)")
+    num_sold_string = make_statement(f"You have sold all the tickets "
+                                     f"(ie: {MAX_TICKETS} tickets)", "-")
 else:
-    print(f"You have sold {tickets_sold} / {MAX_TICKETS} tickets.")
+    num_sold_string = make_statement(f"You have sold {tickets_sold} / "
+                                     f"{MAX_TICKETS} tickets.", "-")
+
+# **** Get current date for heading and filename ****
+# get today's date
+today = date.today()
+
+# Get day, month and year as individual strings
+day = today.strftime("%d")
+month = today.strftime("%m")
+year = today.strftime("%Y")
+
+main_heading = "Mini Movie Fundraiser Ticket Data ({}/{}/{})".format(day, month, year)
+
+# Additional strings / Headings
+heading_string = make_statement(main_heading, "=")
+ticket_details_heading = make_statement("Ticket Details", "-")
+raffle_heading = make_statement("--- Raffle Winner ---", "-")
+adjusted_sales_heading = make_statement("Adjusted Sales & Profit",
+                                        "-")
+adjusted_explanation = (f"We have given away a ticket worth ${ticket_won:.2f} which means \nour "
+                       f"sales have decreased by ${ticket_won:.2f} and our profit \n"
+                       f"decreased by ${profit_won:.2f}")
+
+# List of strings to be outputted / written to file
+to_write = [heading_string, "\n",
+            ticket_details_heading,
+            mini_movie_string, "\n",
+            total_paid_string,
+            total_profit_string, "\n",
+            raffle_heading,
+            lucky_winner_string, "\n",
+            adjusted_sales_heading,
+            adjusted_explanation, "\n",
+            final_total_paid_string,
+            final_profit_string, "\n",
+            num_sold_string]
+
+# Print area
+print()
+for item in to_write:
+    print(item)
+
+# create file to hold data (add .txt extension)
+file_name = "MMF_{}_{}_{}".format(year, month, day)
+write_to = "{}.txt".format(file_name)
+
+text_file = open(write_to, "w+")
+
+# write the item to file
+for item in to_write:
+    text_file.write(item)
+    text_file.write("\n")
